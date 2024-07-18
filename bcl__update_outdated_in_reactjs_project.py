@@ -18,13 +18,14 @@ print("Atualizando as dependências")
 subprocess.run(["npm", "update"])
 
 print("Verificando se houve atualizações")
-subprocess.run(["npm", "outdated", "--json"])
+outdated = subprocess.run(["npm", "outdated", "--json"], capture_output=True, text=True)
+updated = subprocess.run(["npm", "outdated"], capture_output=True, text=True)
 
 # Se houver atualizações, realiza o commit
-if outdated != updated:
+if outdated.stdout != updated.stdout:
     print("Realizando commit das atualizações")
     subprocess.run(["git", "add", "package.json", "package-lock.json"])
     subprocess.run(["git", "commit", "-m", "update: Atualização de dependências [Updating dependencies]"])
 
 print("Dependências atualizadas:")
-print(updated)
+print(updated.stdout)
